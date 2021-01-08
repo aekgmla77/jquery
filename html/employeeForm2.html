@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>html/employeeForm2</title>
+<script src="../js/showPage2.js"></script>
+</head>
+<body>
+	<table>
+		<input type="text" id='eid' name='eid' value='999'>
+		<tr>
+			<td>firstName</td>
+			<td><input type='text' id='fName' name='fName' value='Kang'></td>
+		</tr>
+		<tr>
+			<td>lastName</td>
+			<td><input type='text' id='lName' name='lName' value='dada'></td>
+		</tr>
+		<tr>
+			<td>email</td>
+			<td><input type='text' id='email' name='email' value='KDA'></td>
+		</tr>
+		<tr>
+			<td>phoneNumber</td>
+			<td><input type='text' id='pNumber' name='pNumber'
+				value='010.5555.6666'></td>
+		</tr>
+		<tr>
+			<td>hireDate</td>
+			<td><input type='text' id='hDate' name='hDate'
+				value='1999-09-09 15:15:15'></td>
+		</tr>
+		<tr>
+			<td>jobId</td>
+			<td><input type='text' id='jobId' name='jobId' value='IT_PROG'></td>
+		</tr>
+		<tr>
+			<td>salary</td>
+			<td><input type='text' id='salary' name='salary' value='8000'></td>
+		</tr>
+
+		<tr align='center'>
+			<td><button id='btn' onclick='saveBtn()'>save</button></td>
+			<td><button id='ups' onclick='upsBtn()'>update</button></td>
+		</tr>
+	</table>
+	<div id="show"></div>
+	<script>
+		function upsBtn() {
+			console.log(this);
+			let emid = document.getElementById('eid').value;
+			let fName = document.getElementById('fName').value;
+			let lName = document.getElementById('lName').value;
+			let email = document.getElementById('email').value;
+			let pNumber = document.getElementById('pNumber').value;
+			let hDate = document.getElementById('hDate').value;
+			let jobId = document.getElementById('jobId').value;
+			let salary = document.getElementById('salary').value;
+
+			let url = 'fName=' + fName + '&lName=' + lName + '&email='
+					+ email + '&pNumber=' + pNumber + '&hDate=' + hDate
+					+ '&jobId=' + jobId + '&salary=' + salary + "&eid=" + emid;
+			let upsBtn = new XMLHttpRequest();
+			upsBtn.open('post', '../upEmp');
+			upsBtn.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			upsBtn.send(url);
+			upsBtn.onload = function() {
+				let doc = upsBtn.responseXML;
+				let result = doc.getElementsByTagName('result');
+				let eid = result[0].childNodes[0].firstChild.nodeValue;
+				let tr = document.getElementById('emp_' + eid);
+				tr.childNodes[0].firstChild.nodeValue = emid;
+				tr.childNodes[1].firstChild.nodeValue = fName;
+				tr.childNodes[2].firstChild.nodeValue = lName;
+				tr.childNodes[3].firstChild.nodeValue = email;
+				tr.childNodes[4].firstChild.nodeValue = pNumber;
+				tr.childNodes[5].firstChild.nodeValue = hDate;
+				tr.childNodes[6].firstChild.nodeValue = jobId;
+				tr.childNodes[7].firstChild.nodeValue = salary;
+				
+				console.log(upsBtn.responseXML);
+
+			}
+		}
+
+		function saveBtn() {
+			console.log(this);
+			let fName = document.getElementById('fName').value;
+			let lName = document.getElementById('lName').value;
+			let email = document.getElementById('email').value;
+			let pNumber = document.getElementById('pNumber').value;
+			let hDate = document.getElementById('hDate').value;
+			let jobId = document.getElementById('jobId').value;
+			let salary = document.getElementById('salary').value;
+
+			let url = '../addEmp?fName=' + fName + '&lName=' + lName
+					+ '&email=' + email + '&pNumber=' + pNumber + '&hDate='
+					+ hDate + '&jobId=' + jobId + '&salary=' + salary;
+			let saveReq = new XMLHttpRequest();
+			saveReq.open('get', url);
+			saveReq.send();
+
+			saveReq.onload = function() {
+				console.log(saveReq.responseXML);
+				let doc = saveReq.responseXML;
+				let result = doc.getElementsByTagName('result');
+				console.log(result[0].childNodes);
+				//화면구성. tr, td*5(button) => tbl.appenChild(tr);	
+				let trTag = document.createElement('tr');
+				for (let i = 0; i < result[0].childNodes.length; i++) {
+					let tdTag = document.createElement('td');
+					let val = result[0].childNodes[i].firstChild.nodeValue;
+					let tNode = document.createTextNode(val);
+					tdTag.appendChild(tNode);
+					trTag.appendChild(tdTag);
+				}
+				addB(trTag, myDel);
+				document.getElementById('tbl').appendChild(trTag);
+
+				function myDel() {
+					console.log(this.parentNode.parentNode.remove());
+					let d = this.parentNode.parentNode.childNodes[0].firstChild.nodeValue;
+					let r = new XMLHttpRequest();
+					r.open('get', '../deleteEmp?empId=' + d);
+					r.send();
+					r.onload = function() {
+						console.log(r.reponseText);
+					}
+				}
+
+				function addB(trTag, callBackFunc) {
+					let button = document.createElement('button');
+					button.innerHTML = 'Del';
+					button.onclick = callBackFunc;
+					let tdTag = document.createElement('td');
+					tdTag.appendChild(button);
+					trTag.appendChild(tdTag);
+
+					return trTag;
+				}
+			}
+		}
+		let xhtp = new XMLHttpRequest();
+		xhtp.open('get', '../home');
+		xhtp.send();
+		xhtp.onload = showPage;
+	</script>
+</body>
+</html>

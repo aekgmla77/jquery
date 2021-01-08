@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src='../js/showPage.js'></script>
+</head>
+<body>
+	<table>
+		<tr>
+		<td>boardNo</td>
+	</table>
+	<div id='show'></div>
+	<script>
+		let xhtp = new XMLHttpRequest();
+		xhtp.open('get', '../LIstBoardServlet');
+		xhtp.send();
+		xhtp.onload = showPage;
+	</script>
+</body>
+</html>
