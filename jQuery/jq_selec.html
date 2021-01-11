@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script>
+        let persons = [];
+        persons.push('Hong');
+        persons.push('Hwang');
+        persons.push('Park');
+
+        $(document).ready(function () {
+            let ulTag = $('<ul />').attr('id', 'main');
+            $.each(persons, function (a, b) {
+                console.log(a, b);
+                ulTag.append($('<li />').html(b));
+            })
+
+            console.log(ulTag);
+
+            $('body').append(ulTag);
+
+            let table = $('<table />').attr('border', '1');
+            $.each(persons, function (a, b) {
+                let tr = $('<tr />');
+                $(tr).mouseover(function(){
+                    $(this).css('background','lightblue');
+                })
+                $(tr).mouseout(function(){
+                    $(this).css('background','');
+                })
+                let button = $('<button />').html('OK');
+                $(button).click(function(){
+                    $(this).parent().parent().remove();
+                    console.log($(this).parent().parent());
+                    // $(tr).remove();
+                });
+                tr.append($('<td />').html(b));
+                tr.append($('<td />').html(button));
+                table.append(tr);
+            })
+            $('body').append(table);
+        });
+    </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
