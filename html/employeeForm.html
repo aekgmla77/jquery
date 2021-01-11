@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>html/employeeForm</title>
+<script src="../js/showPage2.js"></script>
+</head>
+<body>
+	<table>
+		<tr><td>firstName</td>
+	     	<td><input type='text' id='fName' name='fName'></td></tr>
+		<tr><td>lastName</td>
+		    <td><input type='text' id='lName' name='lName'></td></tr>
+	    <tr><td>email</td>
+		    <td><input type='text' id='email' name='email'></td></tr>
+		<tr><td>jobId</td>
+		    <td><input type='text' id='jobId' name='jobId'></td></tr>
+		<tr><td>salary</td>
+		    <td><input type='text' id='salary' name='salary'></td></tr>
+		    
+		<tr align='center'><td><button id='btn' onclick='saveBtn()'>save</button></td></tr>
+	</table>
+	<div id="show"></div>
+	<script>
+	function saveBtn() {
+		console.log(this);
+		let fName = document.getElementById('fName').value;
+		let lName = document.getElementById('lName').value;
+		let email = document.getElementById('email').value;
+		let jobId = document.getElementById('jobId').value;
+		let salary = document.getElementById('salary').value;
+		
+		let url = '../addEmp?fName='+fName+'&lName='+lName+'&email='+email+'&jobId='+jobId+'&salary='+salary;
+		let saveReq = new XMLHttpRequest();
+		saveReq.open('get', url);
+		saveReq.send();
+		saveReq.onload = function() {
+			console.log(saveReq.responseXML);
+			//화면구성. tr, td*5(button) => tbl.appenChild(tr);
+			let trTag = document.createElement('tr');
+			//0.
+			let td = document.createElement('td');
+			let val = 999;
+			let tNode = document.createTextNode(val);
+			td.appendChild(tNode);
+			trTag.appendChild(td);
+			//1.
+			td = document.createElement('td');
+			val = document.getElementById('fName').value;
+			tNode = document.createTextNode(val);
+			td.appendChild(tNode);
+			trTag.appendChild(td);
+			//2.
+			td = document.createElement('td');
+			val = document.getElementById('lName').value;
+			tNode = document.createTextNode(val);
+			td.appendChild(tNode);
+			trTag.appendChild(td);
+			//3.
+			td = document.createElement('td');
+			val = document.getElementById('email').value;
+			tNode = document.createTextNode(val);
+			td.appendChild(tNode);
+			trTag.appendChild(td);
+			//4.
+			td = document.createElement('td');
+			val = document.getElementById('salary').value;
+			tNode = document.createTextNode(val);
+			td.appendChild(tNode);
+			trTag.appendChild(td);
+			//5.
+			td = document.createElement('td');
+			let btn = document.createElement('button');
+			btn.innerHTML = 'Del';
+			td.appendChild(btn);
+			trTag.appendChild(td);
+			
+			document.getElementById('tbl').appendChild(trTag);
+		}
+	}
+		let xhtp = new XMLHttpRequest();
+		xhtp.open('get', '../home');
+		xhtp.send();
+		xhtp.onload = showPage;
+	</script>
+</body>
+</html>

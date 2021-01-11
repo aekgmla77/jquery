@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>html/ajaxJson.html</title>
+</head>
+<body>
+<div id = 'show'></div>
+	<script>
+		let json = {
+			"name" : "John",
+			"age" : 30,
+			"cars" : ["Ford", "BMW", "Fiat"]
+		};
+		console.log(json.cars[0]);
+
+		let xhtp = new XMLHttpRequest();
+		xhtp.open('get', '../empListJson');
+		xhtp.send();
+		xhtp.onload = function() {
+			let data = xhtp.response;
+			let obj = JSON.parse(data);
+			let ulTag = document.createElement('ul');
+			/* console.log(JSON.parse(data)); */
+			for (let i = 0; i < obj.length; i++) {
+				let liTag = document.createElement('li');
+				let va = obj[i].id + ',' + obj[i].firstName + ','
+						+ obj[i].lastName + ',' + obj[i].email + ','
+						+ obj[i].jobId + ',' + obj[i].hireDate;
+				let tNode = document.createTextNode(va);
+				liTag.appendChild(tNode);
+				ulTag.appendChild(liTag);
+				console.log(obj[i].id, obj[i].firstName, obj[i].lastName,
+						obj[i].email, obj[i].jobId, obj[i].hireDate);
+			}
+			document.getElementById('show').appendChild(ulTag);
+		}
+	</script>
+</body>
+</html>

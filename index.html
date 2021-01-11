@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>홈입니다.</title>
+</head>
+<body>
+	<h1>반갑습니다!!</h1>
+	<div id="show"></div>
+	<script>
+		let xhtp = new XMLHttpRequest();
+		xhtp.open('get', 'home');
+		xhtp.send();
+		xhtp.onload = showCount;
+
+			function showCount() {
+				console.log(xhtp.responseXML);
+				let doc = xhtp.responseXML;
+				let result = doc.getElementsByTagName('record');
+				let table = document.createElement('table');
+				table.setAttribute('border', '1');
+                /* table.append(createHeader(result[0])); */
+                
+			    let tr = document.createElement('tr');
+				/*function createHeader(title){
+					for(let i = 0; i < title.childNodes.length; i++){
+						let th = document.createElement('th');
+						let str = title.childNodes[i].nodeName.toUpperCase();
+						let textNode = document.createTextNode(str);
+						th.appendChild(textNode);
+						tr.appendChild(th);
+					}
+				} */
+			 	let names = ['직원번호', '이름', '성', '이메일', '폰번호', '입사일', 'job id', '연봉'];
+			 	for(name of names){
+                    let th = document.createElement('th');
+                    th.innerHTML += name;
+                    tr.appendChild(th);
+                }
+                table.appendChild(tr);
+			
+				for (let i = 0; i < result.length; i++) {
+					tr = document.createElement('tr');
+					for (let j = 0; j < result[i].childNodes.length; j++) {
+						let td = document.createElement('td');
+						let str = result[i].childNodes[j].childNodes[0].nodeValue;
+						let textNode = document.createTextNode(str);
+						td.appendChild(textNode);
+						tr.appendChild(td);
+					}
+					table.appendChild(tr);
+				}
+				let show = document.getElementById('show');
+				show.appendChild(table);
+			}
+		
+	</script>
+</body>
+</html>

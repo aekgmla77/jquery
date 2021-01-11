@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>boardList.html</title>
+</head>
+<body>
+	<div id="show"></div>
+	<!-- DAO(method), Servlet, ajax호출(XMLHttpRequest()) -->
+	<script>
+    let xhtp = new XMLHttpRequest();
+	xhtp.open('get', '../LIstBoardServlet');
+	xhtp.send();
+	xhtp.onload = showCount;
+
+		function showCount() {
+			console.log(xhtp.responseXML);
+			let doc = xhtp.responseXML;
+			let result = doc.getElementsByTagName('record');
+			let table = document.createElement('table');
+			table.setAttribute('border', '1');
+		    let tr = document.createElement('tr');
+
+		 	let names = ['NO', '제목', '내용', '작성자', '작성일자'];
+		 	for(name of names){
+             let th = document.createElement('th');
+             th.innerHTML += name;
+             tr.appendChild(th);
+         }
+         table.appendChild(tr);
+         
+         for (let i = 0; i < result.length; i++) {
+				tr = document.createElement('tr');
+				for (let j = 0; j < result[i].childNodes.length; j++) {
+					let td = document.createElement('td');
+					let str = result[i].childNodes[j].childNodes[0].nodeValue;
+					let textNode = document.createTextNode(str);
+					td.appendChild(textNode);
+					tr.appendChild(td);
+				}
+				table.appendChild(tr);
+			}
+			let show = document.getElementById('show');
+			show.appendChild(table);
+		}
+			
+	
+ </script>
+</body>
+</html>

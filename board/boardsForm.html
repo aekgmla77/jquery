@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script src="../js/showPage1.js"></script>
+</head>
+<body>
+	<table>
+		<tr>
+			<td>boardNo</td>
+			<td><input type='text' id='bNo' name='bNo' value='1'></td>
+		</tr>
+		<tr>
+			<td>title</td>
+			<td><input type='text' id='title' name='title' value='sad day'></td>
+		</tr>
+		<tr>
+			<td>content</td>
+			<td><input type='text' id='content' name='content'
+				value='thats a pity'></td>
+		</tr>
+		<tr>
+			<td>writer</td>
+			<td><input type='text' id='writer' name='writer' value='user'></td>
+		</tr>
+		<tr>
+			<td>creationDate</td>
+			<td><input type='text' id='creationDate' name='creationDate' value='2021-01-05'></td>
+		</tr>
+		<tr>
+			<td><button id='btn' onclick='saveBtn()'>save</button></td>
+		</tr>
+	</table>
+	<div id="show"></div>
+	<script>
+	function saveBtn() {
+		console.log(this);
+		let bNo = document.getElementById('bNo').value;
+		let title = document.getElementById('title').value;
+		let content = document.getElementById('content').value;
+		let writer = document.getElementById('writer').value;
+		let creationDate = document.getElementById('creationDate').value;
+		
+		let url = '../insertBoard?bNo=' + bNo + '&title=' + title +'&content=' + 
+				content + '&writer=' + writer + '&creationDate' + creationDate;
+		let saveBtn = new XMLHttpRequest();
+		saveBtn.open('get', url);
+		saveBtn.send();
+		saveBtn.onload = function() {
+			let doc = saveBtn.responseXML;
+			console.log(saveBtn.responseXML);
+			let result = doc.getElementsByTagName('result');
+			console.log(result[0].childNodes)
+			//
+			let trTag = document.createElement('tr');
+			for(let i = 0; i < result[0].childNodes.length; i++){
+				let tdTag = document.createElement('td');
+				let val = result[0].childNodes[i].firstChild.nodeValue;
+				let tNode = document.createTextNode(val);
+				tdTag.appendChild(tNode);
+				trTag.appendChild(tdTag);
+			}
+			addB(trTag, myDel);
+			document.getElementById('tbl').appendChild(trTag);
+			
+			function myDel() {
+				let d = this.parentNode.parentNode.childNodes[0].firstChild.nodeValue;
+				let r = new XMLHttpRequest();
+				r.open('get', '../DeleteBorServlet?bNo=' + d);
+				r.send();
+				r.onload = function() {
+					console.log(r.reponseText);
+				}
+			}
+			
+			function addB(trTag, callBackFunc) {
+				let button = document.createElement('button');
+				button.innerHTML = 'Del';
+				button.onclick = callBackFunc;
+				let tdTag = document.createElement('td');
+				tdTag.appendChild(button);
+				trTag.appendChild(tdTag);
+				
+				return trTag;
+			}
+		}
+	}
+	
+		let xhtp = new XMLHttpRequest();
+		xhtp.open('get', '../LIstBoardServlet');
+		xhtp.send();
+		xhtp.onload = showPage;
+	</script>
+</body>
+</html>
